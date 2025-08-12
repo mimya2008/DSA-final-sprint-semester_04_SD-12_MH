@@ -1,4 +1,3 @@
-// src/main/java/com/keyin/binarytree/BinaryNodeService.java
 package com.keyin.binarytree;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,7 +22,7 @@ public class BinaryNodeService {
         BinaryNode root = null;
         for (int n : numbers) root = insert(root, n);
         nodeRepo.save(root);
-        saveSnapshot(root, originalInput, numbers);   // pass numbers so we can canonicalize
+        saveSnapshot(root, originalInput, numbers);
         return root;
     }
 
@@ -38,7 +37,6 @@ public class BinaryNodeService {
         return root;
     }
 
-    // UPDATED: canonicalize + de-dupe
     private void saveSnapshot(BinaryNode root, String originalInput, List<Integer> numbers) {
         try {
             String json = mapper.writeValueAsString(root); // compact JSON
@@ -46,7 +44,6 @@ public class BinaryNodeService {
             if (treeRepo.findByCanonicalInputs(canon).isEmpty()) {
                 treeRepo.save(new TreeStructure(json, originalInput, canon));
             }
-            // else: duplicate -> do not save another row
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
