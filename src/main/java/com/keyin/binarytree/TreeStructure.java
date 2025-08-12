@@ -1,4 +1,3 @@
-// src/main/java/com/keyin/binarytree/TreeStructure.java
 package com.keyin.binarytree;
 import jakarta.persistence.*;
 
@@ -23,6 +22,10 @@ public class TreeStructure {
         this.treeJson = treeJson;
         this.userInputs = userInputs;
         this.canonicalInputs = canonicalInputs;
+    }
+
+    public TreeStructure(String treeJson, String userInputs) {
+        this(treeJson, userInputs, null);
     }
 
     public Long getId() { return id; }
