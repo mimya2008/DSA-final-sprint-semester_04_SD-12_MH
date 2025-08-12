@@ -1,3 +1,4 @@
+// src/main/java/com/keyin/binarytree/BinaryNodeService.java
 package com.keyin.binarytree;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -6,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BinaryNodeService {
@@ -20,8 +22,8 @@ public class BinaryNodeService {
     public BinaryNode buildTreeFromList(List<Integer> numbers, String originalInput) {
         BinaryNode root = null;
         for (int n : numbers) root = insert(root, n);
-        nodeRepo.save(root);          // store the tree nodes
-        saveSnapshot(root, originalInput);
+        nodeRepo.save(root);
+        saveSnapshot(root, originalInput, numbers);   // pass numbers so we can canonicalize
         return root;
     }
 
@@ -36,10 +38,15 @@ public class BinaryNodeService {
         return root;
     }
 
-    private void saveSnapshot(BinaryNode root, String originalInput) {
+    // UPDATED: canonicalize + de-dupe
+    private void saveSnapshot(BinaryNode root, String originalInput, List<Integer> numbers) {
         try {
-            String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
-            treeRepo.save(new TreeStructure(json, originalInput));
+            String json = mapper.writeValueAsString(root); // compact JSON
+            String canon = numbers.stream().map(String::valueOf).collect(Collectors.joining(","));
+            if (treeRepo.findByCanonicalInputs(canon).isEmpty()) {
+                treeRepo.save(new TreeStructure(json, originalInput, canon));
+            }
+            // else: duplicate -> do not save another row
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -53,4 +60,3 @@ public class BinaryNodeService {
         return out;
     }
 }
-

@@ -1,3 +1,4 @@
+// src/main/java/com/keyin/binarytree/TreeStructure.java
 package com.keyin.binarytree;
 import jakarta.persistence.*;
 
@@ -13,9 +14,15 @@ public class TreeStructure {
     @Column(columnDefinition = "TEXT")
     private String userInputs;
 
+    // NEW: canonical form like "8,4,12,2,6,10,14"
+    @Column(length = 1024)
+    private String canonicalInputs;
+
     public TreeStructure() {}
-    public TreeStructure(String treeJson, String userInputs) {
-        this.treeJson = treeJson; this.userInputs = userInputs;
+    public TreeStructure(String treeJson, String userInputs, String canonicalInputs) {
+        this.treeJson = treeJson;
+        this.userInputs = userInputs;
+        this.canonicalInputs = canonicalInputs;
     }
 
     public Long getId() { return id; }
@@ -24,5 +31,7 @@ public class TreeStructure {
     public void setTreeJson(String treeJson) { this.treeJson = treeJson; }
     public String getUserInputs() { return userInputs; }
     public void setUserInputs(String userInputs) { this.userInputs = userInputs; }
-}
 
+    public String getCanonicalInputs() { return canonicalInputs; }
+    public void setCanonicalInputs(String canonicalInputs) { this.canonicalInputs = canonicalInputs; }
+}
