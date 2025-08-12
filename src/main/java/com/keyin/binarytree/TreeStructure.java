@@ -13,7 +13,6 @@ public class TreeStructure {
     @Column(columnDefinition = "TEXT")
     private String userInputs;
 
-    // NEW: canonical form like "8,4,12,2,6,10,14"
     @Column(length = 1024)
     private String canonicalInputs;
 

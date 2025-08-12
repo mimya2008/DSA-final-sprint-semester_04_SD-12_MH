@@ -20,26 +20,22 @@ class BinaryNodeControllerTest {
     BinaryNodeService svc;
 
     @InjectMocks
-    BinaryNodeController controller; // constructed with mocked svc
+    BinaryNodeController controller;
 
     @Test
     void buildTree_returnsTree() {
-        // Arrange
         BinaryNode root = new BinaryNode(8);
         root.setLeft(new BinaryNode(4));
         root.setRight(new BinaryNode(12));
         when(svc.buildTreeFromList(anyList(), anyString())).thenReturn(root);
 
-        // Act
         BinaryNode out = controller.buildBinarySearchTree(List.of(8, 4, 12));
 
-        // Assert
         assertNotNull(out);
         assertEquals(8, out.getValue());
         assertEquals(4, out.getLeft().getValue());
         assertEquals(12, out.getRight().getValue());
 
-        // verify numbers list was passed through
         ArgumentCaptor<List<Integer>> listCap = ArgumentCaptor.forClass(List.class);
         verify(svc).buildTreeFromList(listCap.capture(), anyString());
         assertEquals(List.of(8,4,12), listCap.getValue());
@@ -47,7 +43,7 @@ class BinaryNodeControllerTest {
 
     @Test
     void buildTreeFromString_parses_then_builds() {
-        // Arrange
+
         String raw = "7, 3 9";
         List<Integer> parsed = List.of(7,3,9);
         when(svc.parseNumbers(raw)).thenReturn(parsed);
@@ -57,10 +53,8 @@ class BinaryNodeControllerTest {
         root.setRight(new BinaryNode(9));
         when(svc.buildTreeFromList(parsed, raw)).thenReturn(root);
 
-        // Act
         BinaryNode out = controller.buildBinarySearchTreeFromString(raw);
 
-        // Assert
         assertNotNull(out);
         assertEquals(7, out.getValue());
         assertEquals(3, out.getLeft().getValue());
